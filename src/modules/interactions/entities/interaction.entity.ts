@@ -1,0 +1,46 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class InteractionEntity {
+  @ApiProperty() id: string;
+  @ApiProperty({ enum: ['inbound', 'outbound'] }) recordType: string;
+  @ApiProperty() callId: string;
+  @ApiProperty() date: Date;
+  @ApiProperty() agentName: string;
+  @ApiProperty() agentId: string;
+  @ApiProperty() campaign: string;
+  @ApiProperty() campaignType: string;
+  @ApiProperty() skill: string;
+  @ApiProperty() customerName: string;
+  @ApiProperty() customerEmail: string;
+  @ApiProperty() customerPhone: string;
+  @ApiProperty() ani: string;
+  @ApiProperty() dnis: string;
+  @ApiProperty() segment: string;
+  @ApiProperty() list: string;
+  @ApiProperty() contactId: string;
+  @ApiProperty({ description: 'Talk time in seconds' }) talkTime: number;
+  @ApiProperty({ description: 'Handle time in seconds' }) handleTime: number;
+  @ApiProperty({ description: 'Hold time in seconds' }) holdTime: number;
+  @ApiProperty({ description: 'IVR time in seconds' }) ivrTime: number;
+  @ApiProperty({ description: 'Wait time in seconds' }) waitTime: number;
+  @ApiProperty({ description: 'Wrap time in seconds' }) wrapTime: number;
+  @ApiProperty() disposition: string;
+  @ApiProperty() dispositionGroupA: string;
+  @ApiProperty() dispositionGroupB: string;
+  @ApiProperty() dispositionGroupC: string;
+  @ApiProperty() dialResult: string;
+  @ApiProperty() abandoned: boolean;
+  @ApiProperty() callCount: number;
+  @ApiProperty() suspensionCount: number;
+  @ApiProperty() ivrContact: string;
+  @ApiProperty() ivrNif: string;
+  @ApiProperty() ivrAccountNumber: string;
+  @ApiProperty() businessMonth: number;
+  @ApiProperty() businessDayOfWeek: number;
+  @ApiProperty() businessDayOfMonth: number;
+  @ApiProperty() businessHour: number;
+  @ApiProperty() evaluated: boolean;
+  @ApiProperty({ enum: ['processed', 'pending', 'error'] }) status: string;
+  @ApiProperty() createdAt: Date;
+  @ApiProperty() updatedAt: Date;
+}
