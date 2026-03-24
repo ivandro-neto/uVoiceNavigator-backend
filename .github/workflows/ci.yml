@@ -1,42 +1,39 @@
-name: CI/CD Pipeline
+name: Wasabi Cloud Service
 
 on:
   push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main", "develop" ]
+    branches: ["main", "master"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Set version
+        run: |
+          MAJOR=$(node -p "require('./package.json').version" | cut -d. -f1)
+          VERSION="${MAJOR}.${{ github.run_number }}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Nova versão: $VERSION"
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Generate Prisma Client
-      run: npx prisma generate
+      - name: Build Docker image
+        run: docker build -t youcall/uvoice:${{ env.VERSION }} -t youcall/uvoice:latest .
 
-    - name: Lint
-      run: npm run lint
-
-    - name: Run Tests
-      run: npm run test
-
-    - name: Build
-      run: npm run build
-
-    - name: Docker Build Test
-      run: docker build -t uvoice-navigator-backend:test .
+      - name: Push Docker image
+        run: |
+          docker push youcall/uvoice:${{ env.VERSION }}
+          docker push youcall/uvoice:latest
