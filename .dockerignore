@@ -28,10 +28,3 @@ docker-compose.yml
 # OS
 .DS_Store
 Thumbs.db
-
-# NestJS/TypeScript
-nest-cli.json
-tsconfig.build.json
-tsconfig.json
-.eslintrc.js
-.prettierrc
