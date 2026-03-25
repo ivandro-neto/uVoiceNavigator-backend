@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import * as pg from 'pg';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
@@ -10,9 +11,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) throw new Error('DATABASE_URL is not defined');
 
-    // Pass PoolConfig directly to avoid @types/pg version conflicts
-    const adapter = new PrismaPg({ connectionString });
+    const pool = new pg.Pool({ connectionString });
+    const adapter = new PrismaPg(pool as any);
     super({ adapter } as any);
+
+    const maskedUrl = connectionString.replace(/:[^:@/]+@/, ':****@');
+    this.logger.debug(`Connecting to database at ${maskedUrl}`);
   }
 
   async onModuleInit() {
