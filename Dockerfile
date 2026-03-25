@@ -34,7 +34,7 @@ WORKDIR /usr/src/app
 RUN apk add --no-cache openssl
 
 COPY package*.json ./
-RUN npm install
+RUN npm install --only=production
 
 # Copy built application and prisma schema from builder
 COPY --from=builder /usr/src/app/dist ./dist
@@ -45,7 +45,7 @@ COPY --from=builder /usr/src/app/prisma ./prisma
 EXPOSE 3000
 
 # Set environment variables (can be overridden at runtime)
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 
 # Command to run the application
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:prod"]
